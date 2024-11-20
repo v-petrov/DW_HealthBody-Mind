@@ -9,7 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -18,19 +17,26 @@ import java.util.UUID;
 @NoArgsConstructor
 public class FoodIntake {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(nullable = false)
     @NotNull
     private double quantity;
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     @NotNull
     private MealTime mealTime;
+
+    @Column(nullable = false)
     @NotNull
     private LocalDate date;
 
     @ManyToOne
     @NotNull
     private User user;
+
     @ManyToOne
     @NotNull
     private Food food;

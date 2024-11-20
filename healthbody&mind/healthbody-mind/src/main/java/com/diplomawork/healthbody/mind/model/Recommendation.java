@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -17,11 +16,14 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Recommendation {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-    @Column(columnDefinition = "TEXT")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
     @NotNull
     private String recommendation;
+
+    @Column(nullable = false)
     @NotNull
     private LocalDate date;
 

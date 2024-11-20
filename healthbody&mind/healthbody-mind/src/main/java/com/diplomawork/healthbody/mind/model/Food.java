@@ -20,19 +20,33 @@ public class Food {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(length = 100, nullable = false)
     @NotNull
     private String name;
+
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     @NotNull
     private Measurement measurement;
+
+    @Column(nullable = false)
     @NotNull
     private int calories;
+
+    @Column(nullable = false)
     @NotNull
     private double carbs;
+
+    @Column(nullable = false)
     @NotNull
     private double fat;
+
+    @Column(nullable = false)
     @NotNull
     private double protein;
+
+    @Column(nullable = false)
     @NotNull
     private double sugar;
 }

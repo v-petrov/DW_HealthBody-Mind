@@ -18,16 +18,28 @@ public class NutritionsAndGoals {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @Column(nullable = false)
     @NotNull
     private int caloriesGoal;
+
+    @Column(nullable = false)
     @NotNull
     private double proteinGoal;
+
+    @Column(nullable = false)
     @NotNull
     private double carbsGoal;
+
+    @Column(nullable = false)
     @NotNull
     private double fatGoal;
+
+    @Column(nullable = false)
     @NotNull
     private int waterGoal;
+
+    @Column(nullable = false)
     @NotNull
     private int stepGoal;
 
