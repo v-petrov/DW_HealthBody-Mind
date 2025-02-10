@@ -1,5 +1,5 @@
 package com.diplomawork.healthbody.mind.model.enums;
 
 public enum ActivityLevel {
-    LOW, MEDIUM, HIGH
+    SEDENTARY, SLIGHT_ACTIVE, MODERATELY_ACTIVE, ACTIVE, VERY_ACTIVE
 }
