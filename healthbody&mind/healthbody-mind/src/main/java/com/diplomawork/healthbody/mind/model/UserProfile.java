@@ -60,6 +60,8 @@ public class UserProfile {
     @Column(nullable = false)
     @NotNull
     private WeeklyGoal weeklyGoal;
+    
+    private String imageUrl;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "userId", nullable = false, unique = true)

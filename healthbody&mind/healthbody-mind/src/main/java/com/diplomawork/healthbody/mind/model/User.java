@@ -34,8 +34,6 @@ public class User {
     @NotNull
     private String password;
 
-    private String imageUrl;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Exercise> exercises;
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
