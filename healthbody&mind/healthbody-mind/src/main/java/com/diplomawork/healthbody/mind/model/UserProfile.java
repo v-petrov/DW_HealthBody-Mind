@@ -11,18 +11,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "UserProfile")
 public class UserProfile {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -47,13 +48,13 @@ public class UserProfile {
     @NotNull
     private int height;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 4, scale = 1)
     @NotNull
-    private double weight;
+    private BigDecimal weight;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 4, scale = 1)
     @NotNull
-    private double goalWeight;
+    private BigDecimal goalWeight;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -61,6 +62,7 @@ public class UserProfile {
     private WeeklyGoal weeklyGoal;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "userId", nullable = false, unique = true)
     @NotNull
     private User user;
 }

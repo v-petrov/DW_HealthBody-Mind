@@ -14,10 +14,11 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "Recommendation")
 public class Recommendation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     @NotNull
@@ -28,6 +29,7 @@ public class Recommendation {
     private LocalDate date;
 
     @ManyToOne
+    @JoinColumn(name = "userId", nullable = false)
     @NotNull
     private User user;
 }

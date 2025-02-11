@@ -16,10 +16,11 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "Exercise")
 public class Exercise {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     @NotNull
@@ -27,8 +28,9 @@ public class Exercise {
 
     @Column(nullable = false)
     @NotNull
-    private double caloriesBurned;
+    private int caloriesBurned;
 
+    @NotNull
     private Integer steps;
 
     @Enumerated(EnumType.STRING)
@@ -46,6 +48,7 @@ public class Exercise {
     private LocalDate date;
 
     @ManyToOne
+    @JoinColumn(name = "userId", nullable = false)
     @NotNull
     private User user;
 }

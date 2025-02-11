@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
@@ -14,10 +15,11 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "NutritionsAndGoals")
 public class NutritionsAndGoals {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(nullable = false)
     @NotNull
@@ -25,25 +27,26 @@ public class NutritionsAndGoals {
 
     @Column(nullable = false)
     @NotNull
-    private double proteinGoal;
+    private int proteinGoal;
 
     @Column(nullable = false)
     @NotNull
-    private double carbsGoal;
+    private int carbsGoal;
 
     @Column(nullable = false)
     @NotNull
-    private double fatGoal;
+    private int fatGoal;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 3, scale = 1)
     @NotNull
-    private int waterGoal;
+    private BigDecimal waterGoal;
 
     @Column(nullable = false)
     @NotNull
     private int stepGoal;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "userId", nullable = false, unique = true)
     @NotNull
     private User user;
 }

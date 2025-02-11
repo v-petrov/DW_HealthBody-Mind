@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -15,14 +16,15 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "FoodIntake")
 public class FoodIntake {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 6, scale = 2)
     @NotNull
-    private double quantity;
+    private BigDecimal quantity;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -34,10 +36,12 @@ public class FoodIntake {
     private LocalDate date;
 
     @ManyToOne
+    @JoinColumn(name = "userId", nullable = false)
     @NotNull
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "foodId", nullable = false)
     @NotNull
     private Food food;
 }

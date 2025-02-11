@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -16,10 +17,11 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "Food")
 public class Food {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     @Column(length = 100, nullable = false)
     @NotNull
@@ -34,19 +36,19 @@ public class Food {
     @NotNull
     private int calories;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 4, scale = 1)
     @NotNull
-    private double carbs;
+    private BigDecimal carbs;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 4, scale = 1)
     @NotNull
-    private double fat;
+    private BigDecimal fat;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 4, scale = 1)
     @NotNull
-    private double protein;
+    private BigDecimal protein;
 
-    @Column(nullable = false)
+    @Column(nullable = false, precision = 4, scale = 1)
     @NotNull
-    private double sugar;
+    private BigDecimal sugar;
 }
