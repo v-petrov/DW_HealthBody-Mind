@@ -63,7 +63,7 @@ public class UserProfile {
     
     private String imageUrl;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "userId", nullable = false, unique = true)
     @NotNull
     private User user;
