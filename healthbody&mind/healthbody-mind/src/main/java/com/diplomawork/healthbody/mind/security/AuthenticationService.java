@@ -1,6 +1,6 @@
 package com.diplomawork.healthbody.mind.security;
 
-import com.diplomawork.healthbody.mind.exceptions.EmailValidation;
+import com.diplomawork.healthbody.mind.exceptions.AuthenticationException;
 import com.diplomawork.healthbody.mind.model.User;
 import com.diplomawork.healthbody.mind.model.UserProfile;
 import com.diplomawork.healthbody.mind.model.enums.ActivityLevel;
@@ -30,7 +30,7 @@ public class AuthenticationService {
 
     public String userLogIn(AuthenticationRequest authenticationRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(),
-                                                                                    authenticationRequest.getPassword()));
+                authenticationRequest.getPassword()));
 
         User currUser = userRepository.findByEmail(authenticationRequest.getEmail()).orElseThrow();
         return jwtService.generateToken(currUser);
@@ -38,7 +38,7 @@ public class AuthenticationService {
     @Transactional
     public String userRegistration(RegisterRequest registerRequest) {
         if (userRepository.findByEmail(registerRequest.getEmail()).isPresent()) {
-            throw new EmailValidation("This email already exists!");
+            throw new AuthenticationException("Invalid email or password.");
         }
         String hashedPassword = passwordEncoder.encode(registerRequest.getPassword());
 
@@ -68,5 +68,8 @@ public class AuthenticationService {
         }
 
         return jwtService.generateToken(user);
+    }
+    public boolean isEmailAlreadyInUse(String email) {
+        return userRepository.existsByEmail(email);
     }
 }

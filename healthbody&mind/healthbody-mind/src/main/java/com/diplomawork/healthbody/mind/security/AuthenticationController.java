@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collections;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -26,5 +29,11 @@ public class AuthenticationController {
     private ResponseEntity<AuthenticationResponse> registerForm(@Valid @RequestBody RegisterRequest registerRequest) {
         String token = authenticationService.userRegistration(registerRequest);
         return ResponseEntity.ok(new AuthenticationResponse(token));
+    }
+    @PostMapping("/emailValidation")
+    private ResponseEntity<Map<String, Boolean>> emailValidation(@RequestBody Map<String, String> emailRequest) {
+        String email = emailRequest.get("email");
+        boolean exists = authenticationService.isEmailAlreadyInUse(email);
+        return ResponseEntity.ok(Collections.singletonMap("exists", exists));
     }
 }
