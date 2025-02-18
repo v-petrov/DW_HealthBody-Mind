@@ -39,12 +39,16 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
     public Integer extractUserId(String token) {
-        Claims claims = Jwts.parser()
-                .verifyWith(getSigningKey())
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
-        return claims.get("user_id", Integer.class);
+        try {
+            Claims claims = Jwts.parser()
+                    .verifyWith(getSigningKey())
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+            return claims.get("user_id", Integer.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid or expired token!");
+        }
     }
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         Claims claims = Jwts.parser()
