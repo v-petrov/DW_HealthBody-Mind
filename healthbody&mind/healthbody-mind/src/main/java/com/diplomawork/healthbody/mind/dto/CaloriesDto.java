@@ -17,4 +17,6 @@ public class CaloriesDto {
     int carbs;
     @NotNull
     int fats;
+    @NotNull
+    double water;
 }
