@@ -12,6 +12,7 @@ import com.diplomawork.healthbody.mind.repository.UserRepository;
 import com.diplomawork.healthbody.mind.security.jwt.JwtService;
 import com.diplomawork.healthbody.mind.security.model.AuthenticationRequest;
 import com.diplomawork.healthbody.mind.security.model.RegisterRequest;
+import com.diplomawork.healthbody.mind.service.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,6 +28,7 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
 
     public String userLogIn(AuthenticationRequest authenticationRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(),
@@ -50,8 +52,9 @@ public class AuthenticationService {
                 .build();
         user = userRepository.save(user);
 
+        UserProfile userProfile;
         try {
-            UserProfile userProfile = UserProfile.builder()
+            userProfile = UserProfile.builder()
                     .goal(Goal.valueOf(registerRequest.getGoal()))
                     .activityLevel(ActivityLevel.valueOf(registerRequest.getActivityLevel()))
                     .gender(Gender.valueOf(registerRequest.getGender()))
@@ -66,6 +69,8 @@ public class AuthenticationService {
         } catch (Exception e) {
             throw new RuntimeException("User's profile information couldn't be saved");
         }
+
+        userService.calculateUserCalories(userProfile, user.getId(), true, 0.0);
 
         return jwtService.generateToken(user);
     }
