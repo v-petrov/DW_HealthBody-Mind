@@ -24,13 +24,12 @@ public class Exercise {
 
     @Column(nullable = false)
     @NotNull
-    private int duration;
+    private int durationInMinutes;
 
     @Column(nullable = false)
     @NotNull
     private int caloriesBurned;
 
-    @NotNull
     private Integer steps;
 
     @Enumerated(EnumType.STRING)
@@ -39,8 +38,6 @@ public class Exercise {
     private Type type;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    @NotNull
     private WorkoutActivityLevel workoutActivityLevel;
 
     @Column(nullable = false)
