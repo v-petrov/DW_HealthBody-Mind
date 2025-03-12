@@ -29,7 +29,7 @@ public class ExerciseService {
                 .caloriesBurned(liftingDto.getCaloriesBurned())
                 .type(Type.LIFTING)
                 .workoutActivityLevel(WorkoutActivityLevel.valueOf(liftingDto.getWorkoutActivityLevel()))
-                .date(LocalDate.now())
+                .date(LocalDate.parse(liftingDto.getDate()))
                 .user(user).build();
         exerciseRepository.save(exercise);
     }
@@ -41,7 +41,7 @@ public class ExerciseService {
                 .caloriesBurned(cardioDto.getCaloriesBurned())
                 .steps(cardioDto.getSteps())
                 .type(Type.CARDIO)
-                .date(LocalDate.now())
+                .date(LocalDate.parse(cardioDto.getDate()))
                 .user(user).build();
         exerciseRepository.save(exercise);
     }
