@@ -10,6 +10,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class LiftingDto {
     @NotNull
+    String date;
+    @NotNull
     String workoutActivityLevel;
     @NotNull
     int durationInMinutes;

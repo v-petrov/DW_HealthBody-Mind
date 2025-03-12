@@ -10,6 +10,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class CardioDto {
     @NotNull
+    String date;
+    @NotNull
     int durationInMinutes;
     @NotNull
     int caloriesBurned;
