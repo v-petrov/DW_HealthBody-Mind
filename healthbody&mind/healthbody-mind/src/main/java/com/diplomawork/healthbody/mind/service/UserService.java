@@ -48,26 +48,10 @@ public class UserService {
 
         double calories;
         final double commonData = 10 * weight.doubleValue() + 6.25 * height;
-        switch (gender) {
-            case MALE -> calories = commonData - 5 * age + 5;
-            case FEMALE -> calories = commonData - 5 * age - 161;
-            default -> throw new RuntimeException("Error with Gender enum value");
-        }
-        switch (activityLevel) {
-            case SEDENTARY -> calories *= 1.2;
-            case SLIGHT_ACTIVE -> calories *= 1.375;
-            case MODERATELY_ACTIVE -> calories *= 1.55;
-            case ACTIVE -> calories *= 1.725;
-            case VERY_ACTIVE -> calories *= 1.9;
-            default -> throw new RuntimeException("Error with ActivityLevel enum value");
-        }
-        switch (weeklyGoal) {
-            case LOSE_0_5_KG -> calories -= 250;
-            case LOSE_1_KG -> calories -= 500;
-            case GAIN_0_5_KG -> calories += 250;
-            case GAIN_1_KG -> calories += 500;
-            default -> throw new RuntimeException("Error with WeeklyGoal enum value");
-        }
+        calories = calculateCaloriesForGender(gender, commonData, age);
+        calories = calculateCaloriesForActivity(activityLevel, calories);
+        calories = calculateCaloriesForWeeklyGoal(weeklyGoal, calories);
+
         int protein = (int) ((calories * 0.25) / 4.0);
         int fats = (int) ((calories * 0.25) / 9.0);
         int carbs = (int) ((calories * 0.50) / 4.0);
@@ -169,5 +153,37 @@ public class UserService {
         }
 
         return  userProfile.getImageUrl();
+    }
+    private double calculateCaloriesForGender(Gender gender, double commonData, int age) {
+        double calories;
+        switch (gender) {
+            case MALE -> calories = commonData - 5 * age + 5;
+            case FEMALE -> calories = commonData - 5 * age - 161;
+            default -> throw new RuntimeException("Error with Gender enum value");
+        }
+        return calories;
+    }
+    private double calculateCaloriesForActivity(ActivityLevel activityLevel, double calories) {
+        double caloriesAL = calories;
+        switch (activityLevel) {
+            case SEDENTARY -> caloriesAL *= 1.2;
+            case SLIGHT_ACTIVE -> caloriesAL *= 1.375;
+            case MODERATELY_ACTIVE -> caloriesAL *= 1.55;
+            case ACTIVE -> caloriesAL *= 1.725;
+            case VERY_ACTIVE -> caloriesAL *= 1.9;
+            default -> throw new RuntimeException("Error with ActivityLevel enum value");
+        }
+        return caloriesAL;
+    }
+    private double calculateCaloriesForWeeklyGoal(WeeklyGoal weeklyGoal, double calories) {
+        double caloriesWG = calories;
+        switch (weeklyGoal) {
+            case LOSE_0_5_KG -> caloriesWG -= 250;
+            case LOSE_1_KG -> caloriesWG -= 500;
+            case GAIN_0_5_KG -> caloriesWG += 250;
+            case GAIN_1_KG -> caloriesWG += 500;
+            default -> throw new RuntimeException("Error with WeeklyGoal enum value");
+        }
+        return caloriesWG;
     }
 }
