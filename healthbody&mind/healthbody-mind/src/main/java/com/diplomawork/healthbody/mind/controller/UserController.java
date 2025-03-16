@@ -1,6 +1,7 @@
 package com.diplomawork.healthbody.mind.controller;
 
 import com.diplomawork.healthbody.mind.dto.CaloriesDto;
+import com.diplomawork.healthbody.mind.dto.ProfilePictureDto;
 import com.diplomawork.healthbody.mind.dto.UserDataDto;
 import com.diplomawork.healthbody.mind.dto.UserProfileDto;
 import com.diplomawork.healthbody.mind.security.jwt.JwtService;
@@ -9,11 +10,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.Map;
 
@@ -23,7 +19,6 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
-    private static final String IMAGES_DIR = "images/";
 
     @GetMapping("/getCalories")
     private ResponseEntity<CaloriesDto> getUsersCalories(@RequestHeader("Authorization") String token) {
@@ -71,39 +66,26 @@ public class UserController {
         return ResponseEntity.ok(updatedUserCalories);
     }
     @PutMapping("/updateProfilePicture")
-    private ResponseEntity<String> uploadProfilePicture(@RequestHeader("Authorization") String token, @RequestParam("file") MultipartFile file) {
+    private ResponseEntity<Map<String, String>> uploadProfilePicture(@RequestHeader("Authorization") String token, @Valid @RequestBody ProfilePictureDto profilePictureDto) {
         if (!token.startsWith("Bearer ")) {
             throw new RuntimeException("Invalid token format.");
         }
 
         String cleanToken = token.replace("Bearer ", "");
         Integer userId = jwtService.extractUserId(cleanToken);
-        try {
-            if (file.isEmpty()) {
-                throw new RuntimeException("File is empty!");
-            }
-            Files.createDirectories(Paths.get(IMAGES_DIR));
-            String filename = "profilePictureOfUserWithId_" + userId + "_" + file.getOriginalFilename();
-            Path filePath = Paths.get(IMAGES_DIR, filename);
-            Files.write(filePath, file.getBytes());
-            String imageUrl = "/images/" + filename;
-            userService.updateProfilePicture(userId, imageUrl);
-
-            return ResponseEntity.ok(imageUrl);
-        } catch (Exception e) {
-            throw new RuntimeException("Error with processing the image!");
-        }
+        userService.updateProfilePicture(userId, profilePictureDto.getProfilePictureUrl());
+        return ResponseEntity.ok(Collections.singletonMap("validation", "Profile picture has been updated successfully!"));
     }
     @GetMapping("/getProfilePicture")
-    private ResponseEntity<String> getProfilePicture(@RequestHeader("Authorization") String token) {
+    private ResponseEntity<ProfilePictureDto> getProfilePicture(@RequestHeader("Authorization") String token) {
         if (!token.startsWith("Bearer ")) {
             throw new RuntimeException("Invalid token format.");
         }
 
         String cleanToken = token.replace("Bearer ", "");
         Integer userId = jwtService.extractUserId(cleanToken);
-        String imageUrl = userService.getProfilePicture(userId);
+        ProfilePictureDto profilePictureDto = userService.getProfilePicture(userId);
 
-        return ResponseEntity.ok(imageUrl);
+        return ResponseEntity.ok(profilePictureDto);
     }
 }

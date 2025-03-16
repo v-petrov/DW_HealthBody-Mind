@@ -1,6 +1,7 @@
 package com.diplomawork.healthbody.mind.service;
 
 import com.diplomawork.healthbody.mind.dto.CaloriesDto;
+import com.diplomawork.healthbody.mind.dto.ProfilePictureDto;
 import com.diplomawork.healthbody.mind.dto.UserDataDto;
 import com.diplomawork.healthbody.mind.dto.UserProfileDto;
 import com.diplomawork.healthbody.mind.exceptions.UserNotFoundException;
@@ -144,15 +145,15 @@ public class UserService {
         userProfile.setImageUrl(imageUrl);
         userProfileRepository.save(userProfile);
     }
-    public String getProfilePicture(Integer userId) {
+    public ProfilePictureDto getProfilePicture(Integer userId) {
         UserProfile userProfile = userProfileRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("User's profile couldn't be found!"));
 
         if (userProfile.getImageUrl() == null || userProfile.getImageUrl().isEmpty()) {
             throw new RuntimeException("No profile picture found.");
         }
-
-        return  userProfile.getImageUrl();
+        return ProfilePictureDto.builder()
+                .profilePictureUrl(userProfile.getImageUrl()).build();
     }
     private double calculateCaloriesForGender(Gender gender, double commonData, int age) {
         double calories;
