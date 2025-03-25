@@ -150,7 +150,8 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User's profile couldn't be found!"));
 
         if (userProfile.getImageUrl() == null || userProfile.getImageUrl().isEmpty()) {
-            throw new RuntimeException("No profile picture found.");
+            return ProfilePictureDto.builder()
+                    .profilePictureUrl("").build();
         }
         return ProfilePictureDto.builder()
                 .profilePictureUrl(userProfile.getImageUrl()).build();
