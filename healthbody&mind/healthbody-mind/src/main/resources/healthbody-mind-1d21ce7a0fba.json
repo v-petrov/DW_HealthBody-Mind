@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "healthbody-mind",
+  "private_key_id": "1d21ce7a0fbae2b466b1bd58b622774c33e6c5e7",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDqvj7W817d/2VJ\nqzCSpqqusbXCgp9EMad1ANv67080Ulyt46Odcbd7bWknXJZ77EIHicQYQFKAmOR7\nOGXyNcKGwqcuvu/BoKYP9hCwjqT6mx4W6VCNem66ZOcUqpLVRYPBx3/WQ6pJqR0O\nZMRTqWQJBhBXDym4HM6e/6lmzAutieMPSCvgzhoKtC13rxFI4kW2arcg1OVOabpN\nLyVKhM3sKTzD/wKs5QGuIcKaqGhaHg3COYv9TU0Onv7JLQ5Wn8KtZMHa+65hPkrb\n5ZXEkRO32W9FigJl7XNgNYk1prT0GU+oW18zDfws1opQK8RbKixvSp7sc6f7Kntp\nBAhotEChAgMBAAECggEADIH+jy2AjIujNf2tJONEjPJjIO4c1mFe7tkQ35oIulz5\nGzrZ6PW6NRVrWPGSAyBflE8+55vlyXxcEES9Cd7bcprElbUOyV5p+se9s+ql18SU\nIdxksmUnqT7fITbFhB+kGZsrsJsCY9Ji/fVYkKyh6+kqzbi9HFZMnCQ7PoL4zFJG\nad+SyaKqxVNKPfx4jkRn53BmCrcA0yD8F8iSIdZU1HlsNY5VK/JkhwpsvRrYl+Wk\nRxL+csHZRm9SVcPYBUf8X3fz+7Rj8zDVWqOVly3tJiN+lJMNrdHXr0EhnMre9nyi\n7B+ZKiI3zyv7u+Gjff6at0hghoV+zc1GWbfbWnKO0QKBgQD6Ev6v65sgJaJFvt/4\nTna0zSwgCqIJB4wIsK7uhTgYHBJdzQzr7owxSerJI58zUSCUAUF85BVAqZqHOd9D\nY9k5TzjG9VvYQuuHORVeuFmkK9+7GQ06RNkW4lt4gv4GUoR9ei9EpePS90zM33jF\n4m5Kgr6pynlW9CKMAL4lX7B0UwKBgQDwTj/CP0haXzNdzgRH/Ug3xum8GaQV454e\nDe/McM/jD0Ov090Rl2CyYC+o26X3i+fDThJW0HklTKJ3xfr3u1o1im1pxHXtm8X3\n3yb/bCRZ15Wn2kKOANunxjkDEVctzGyLKQCcCYtf8YVr7dASJUyxG4go0vKYVjNS\n49vys4qYuwKBgB6GsxBGcmk6LtTUuAJXkaYAZaKDqcPwZ+enqbL0ECThSFyq6yjh\ntbtOipqC/qwE+zUV8iiMrwt1qKdZKSfQyHN2eDfRO6TqhlW7YiBt4INp16W/KR4z\nyUxB1WiglOGwsPugLqTymxzlkzpvDQ8a1NvDmgKf9K/onU75yDxHsgKBAoGBAOfF\n8QT/WF+htr9g9wwgJMl3VvUPng1mrpi6RHFg1YFgtZ4er/hJkwA4eX9Z6uepzu22\nnUWSaWYqVgFDuN27nDRLwV/kFwIH3pdGaiytNxpYLoXoo4ynEzTsoQxuazFHG+HU\nuDvHkOAG6PLCOo9l3mRr85W8cDOx4GqwTvH1bVYFAoGAJ8j2ZDIRVMsvvvi9wRhS\nlCQCvbSj6foFKJoT52WrSQ0F6k6UaVJtDNpaoVOGP68kKIBBLHhWlbW4EnCPWw+O\nkjiAQn/8OOjvG2HkJrqQ4jexHjt3/WBCQhesjVrcHdsHZkbEvbVH5oYK5TvwYTNQ\nkzaOtZ/Zg1HI6jai+ECJPBA=\n-----END PRIVATE KEY-----\n",
+  "client_email": "dialogflow-service-account@healthbody-mind.iam.gserviceaccount.com",
+  "client_id": "113843361006601446339",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dialogflow-service-account%40healthbody-mind.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
