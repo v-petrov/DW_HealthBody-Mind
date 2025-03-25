@@ -12,7 +12,7 @@ import java.util.Collections;
 public class DialogflowTokenManager {
 
     private static final String DIALOGFLOW_SCOPE = "https://www.googleapis.com/auth/cloud-platform";
-    private static final String KEY_FILE_PATH = "src/main/resources/healthbody-mind-1d21ce7a0fba.json";
+    private static final String KEY_FILE_PATH = "src/main/resources/healthbody-mind-a54aef5f5ad5.json";
 
     private AccessToken cachedToken;
 
