@@ -1,6 +1,5 @@
 package com.diplomawork.healthbody.mind.model;
 
-import com.diplomawork.healthbody.mind.model.enums.Goal;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -8,23 +7,31 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "Recommendation")
-public class Recommendation {
+@AllArgsConstructor
+@Table(name = "UserRecommendation",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date"})})
+public class UserRecommendation {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    @NotNull
-    private String recommendation;
-
-    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     @NotNull
-    private Goal goal;
+    private LocalDate date;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
+    @NotNull
+    private String filledRecommendation;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @NotNull
+    private User user;
 }
