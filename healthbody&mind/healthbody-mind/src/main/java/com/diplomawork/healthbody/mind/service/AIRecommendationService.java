@@ -92,7 +92,7 @@ public class AIRecommendationService {
 
         return template
                 .replace("{user.goal}", userDynamicDataDto.getGoal().replace("_", " ").toLowerCase())
-                .replace("{user.weeklyGoal}", userDynamicDataDto.getWeeklyGoal().replace("_", " ").toLowerCase())
+                .replace("{user.weeklyGoal}", formatWeeklyGoal(userDynamicDataDto.getWeeklyGoal()))
                 .replace("{user.weight}", String.format("%.1f", userDynamicDataDto.getWeight()))
                 .replace("{user.goalWeight}", String.format("%.1f", userDynamicDataDto.getGoalWeight()))
                 .replace("{user.activityLevel}", userDynamicDataDto.getActivityLevel().replace("_", " ").toLowerCase())
@@ -109,6 +109,15 @@ public class AIRecommendationService {
             case "LOSE_1_KG", "GAIN_1_KG" -> (int) Math.ceil(Math.abs(weight - goalWeight));
             case "LOSE_0_5_KG", "GAIN_0_5_KG" -> (int) Math.ceil(Math.abs(weight - goalWeight) / 0.5);
             default -> 0;
+        };
+    }
+    private String formatWeeklyGoal(String weeklyGoal) {
+        return switch (weeklyGoal) {
+            case "LOSE_0_5_KG" -> "losing 0.5kg";
+            case "GAIN_0_5_KG" -> "gaining 0.5kg";
+            case "LOSE_1_KG" -> "losing 1kg";
+            case "GAIN_1_KG" -> "gaining 1kg";
+            default -> weeklyGoal;
         };
     }
 }
