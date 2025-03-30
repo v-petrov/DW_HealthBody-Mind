@@ -1,6 +1,7 @@
 package com.diplomawork.healthbody.mind.security;
 
 import com.diplomawork.healthbody.mind.exceptions.AuthenticationException;
+import com.diplomawork.healthbody.mind.exceptions.UserNotFoundException;
 import com.diplomawork.healthbody.mind.model.User;
 import com.diplomawork.healthbody.mind.model.UserProfile;
 import com.diplomawork.healthbody.mind.model.enums.ActivityLevel;
@@ -76,5 +77,13 @@ public class AuthenticationService {
     }
     public boolean isEmailAlreadyInUse(String email) {
         return userRepository.existsByEmail(email);
+    }
+    public void resetPassword(String email, String newPassword) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User couldn't be found."));
+
+        String hashedPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(hashedPassword);
+        userRepository.save(user);
     }
 }

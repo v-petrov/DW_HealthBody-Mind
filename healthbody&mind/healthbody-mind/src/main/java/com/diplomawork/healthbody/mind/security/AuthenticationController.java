@@ -1,5 +1,6 @@
 package com.diplomawork.healthbody.mind.security;
 
+import com.diplomawork.healthbody.mind.dto.ForgotPasswordDto;
 import com.diplomawork.healthbody.mind.security.model.AuthenticationRequest;
 import com.diplomawork.healthbody.mind.security.model.AuthenticationResponse;
 import com.diplomawork.healthbody.mind.security.model.RegisterRequest;
@@ -35,5 +36,10 @@ public class AuthenticationController {
         String email = emailRequest.get("email");
         boolean exists = authenticationService.isEmailAlreadyInUse(email);
         return ResponseEntity.ok(Collections.singletonMap("exists", exists));
+    }
+    @PostMapping("/forgotPassword")
+    public ResponseEntity<Map<String, String>> resetForgottenPassword(@RequestBody ForgotPasswordDto forgotPasswordDto) {
+        authenticationService.resetPassword(forgotPasswordDto.getEmail(), forgotPasswordDto.getNewPassword());
+        return ResponseEntity.ok(Collections.singletonMap("validation", "Password has been reset successfully."));
     }
 }
