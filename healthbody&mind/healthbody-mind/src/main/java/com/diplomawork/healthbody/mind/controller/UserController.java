@@ -1,9 +1,6 @@
 package com.diplomawork.healthbody.mind.controller;
 
-import com.diplomawork.healthbody.mind.dto.CaloriesDto;
-import com.diplomawork.healthbody.mind.dto.ProfilePictureDto;
-import com.diplomawork.healthbody.mind.dto.UserDataDto;
-import com.diplomawork.healthbody.mind.dto.UserProfileDto;
+import com.diplomawork.healthbody.mind.dto.*;
 import com.diplomawork.healthbody.mind.security.jwt.JwtService;
 import com.diplomawork.healthbody.mind.service.UserService;
 import jakarta.validation.Valid;
@@ -85,7 +82,28 @@ public class UserController {
         String cleanToken = token.replace("Bearer ", "");
         Integer userId = jwtService.extractUserId(cleanToken);
         ProfilePictureDto profilePictureDto = userService.getProfilePicture(userId);
-
         return ResponseEntity.ok(profilePictureDto);
+    }
+    @PostMapping("/changePassword")
+    private ResponseEntity<Map<String, String>> changePassword(@RequestHeader("Authorization") String token, @Valid @RequestBody ChangingPasswordDto changingPasswordDto) {
+        if (!token.startsWith("Bearer ")) {
+            throw new RuntimeException("Invalid token format.");
+        }
+
+        String cleanToken = token.replace("Bearer ", "");
+        Integer userId = jwtService.extractUserId(cleanToken);
+        userService.changePassword(userId, changingPasswordDto);
+        return ResponseEntity.ok(Collections.singletonMap("validation", "Your password has been changed successfully!"));
+    }
+    @PostMapping("/changeEmail")
+    private ResponseEntity<Map<String, String>> changeEmail(@RequestHeader("Authorization") String token, @Valid @RequestBody ChangingEmailDto changingEmailDto) {
+        if (!token.startsWith("Bearer ")) {
+            throw new RuntimeException("Invalid token format.");
+        }
+
+        String cleanToken = token.replace("Bearer ", "");
+        Integer userId = jwtService.extractUserId(cleanToken);
+        userService.changeEmail(userId, changingEmailDto);
+        return ResponseEntity.ok(Collections.singletonMap("validation", "Your email has been changed successfully!"));
     }
 }

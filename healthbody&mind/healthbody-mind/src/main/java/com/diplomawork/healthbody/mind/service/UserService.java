@@ -1,9 +1,6 @@
 package com.diplomawork.healthbody.mind.service;
 
-import com.diplomawork.healthbody.mind.dto.CaloriesDto;
-import com.diplomawork.healthbody.mind.dto.ProfilePictureDto;
-import com.diplomawork.healthbody.mind.dto.UserDataDto;
-import com.diplomawork.healthbody.mind.dto.UserProfileDto;
+import com.diplomawork.healthbody.mind.dto.*;
 import com.diplomawork.healthbody.mind.exceptions.UserNotFoundException;
 import com.diplomawork.healthbody.mind.model.NutritionsAndGoals;
 import com.diplomawork.healthbody.mind.model.User;
@@ -16,6 +13,7 @@ import com.diplomawork.healthbody.mind.repository.NutritionsAndGoalsRepository;
 import com.diplomawork.healthbody.mind.repository.UserProfileRepository;
 import com.diplomawork.healthbody.mind.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -155,6 +153,28 @@ public class UserService {
         }
         return ProfilePictureDto.builder()
                 .profilePictureUrl(userProfile.getImageUrl()).build();
+    }
+    public void changePassword(Integer userId, ChangingPasswordDto changingPasswordDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User couldn't be found!"));
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        if (!passwordEncoder.matches(changingPasswordDto.oldPassword, user.getPassword())) {
+            throw new IllegalArgumentException("Current password is incorrect!");
+        }
+        user.setPassword(passwordEncoder.encode(changingPasswordDto.newPassword));
+        userRepository.save(user);
+    }
+    public void changeEmail(Integer userId, ChangingEmailDto changingEmailDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User couldn't be found!"));
+        if (!new BCryptPasswordEncoder().matches(changingEmailDto.getPassword(), user.getPassword())) {
+            throw new RuntimeException("We couldn't process your request. Please check your inputs.");
+        }
+        if (userRepository.existsByEmail(changingEmailDto.getNewEmail())) {
+            throw new RuntimeException("We couldn't process your request. Please check your inputs.");
+        }
+        user.setEmail(changingEmailDto.getNewEmail());
+        userRepository.save(user);
     }
     private double calculateCaloriesForGender(Gender gender, double commonData, int age) {
         double calories;
