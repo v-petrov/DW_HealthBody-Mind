@@ -29,7 +29,7 @@ public class UserService {
 
     public CaloriesDto getUserCalories(Integer userId) {
         NutritionsAndGoals caloriesGoals = nutritionsAndGoalsRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("User calories couldn't be found!"));
+                .orElseThrow(() -> new RuntimeException("User goals couldn't be found!"));
         return CaloriesDto.builder()
                 .calories(caloriesGoals.getCaloriesGoal())
                 .protein(caloriesGoals.getProteinGoal())
