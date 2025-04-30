@@ -1,0 +1,59 @@
+@startuml
+actor User
+participant AuthenticationController
+participant AuthenticationService
+participant UserRepository
+participant PasswordEncoder
+participant UserProfileRepository
+participant UserService
+participant JwtService
+participant NutritionsAndGoalsRepository
+
+User -> AuthenticationController : registerForm(registerRequest)
+activate AuthenticationController
+
+AuthenticationController -> AuthenticationService : userRegistration(registerRequest)
+activate AuthenticationService
+
+AuthenticationService -> UserRepository : findByEmail(email)
+activate UserRepository
+UserRepository -->> AuthenticationService : Optional<User>
+deactivate UserRepository
+
+AuthenticationService -> PasswordEncoder : encode(password)
+activate PasswordEncoder
+PasswordEncoder -->> AuthenticationService : hashedPassword
+deactivate PasswordEncoder
+
+AuthenticationService -> UserRepository : save(user)
+activate UserRepository
+UserRepository -->> AuthenticationService : User
+deactivate UserRepository
+
+AuthenticationService -> UserProfileRepository : save(userProfile)
+activate UserProfileRepository
+UserProfileRepository -->> AuthenticationService : void
+deactivate UserProfileRepository
+
+AuthenticationService -> UserService : calculateUserCalories(userProfile, userId, flag, water)
+activate UserService
+
+UserService -> NutritionsAndGoalsRepository : save(nutritionsAndGoals)
+activate NutritionsAndGoalsRepository
+NutritionsAndGoalsRepository -->> UserService : void
+deactivate NutritionsAndGoalsRepository
+
+UserService -->> AuthenticationService : void
+deactivate UserService
+
+AuthenticationService -> JwtService : generateToken(user)
+activate JwtService
+JwtService -->> AuthenticationService : token
+deactivate JwtService
+
+AuthenticationService -->> AuthenticationController : token
+deactivate AuthenticationService
+
+AuthenticationController -->> User : ResponseEntity<AuthenticationResponse>
+deactivate AuthenticationController
+@enduml

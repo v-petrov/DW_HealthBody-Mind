@@ -1,0 +1,131 @@
+@startuml
+class AuthenticationController {
+    -service: AuthenticationService
+    -registerForm(registerRequest: RegisterRequest): ResponseEntity<AuthenticationResponse>
+}
+
+class AuthenticationService {
+    -userRepository: UserRepository
+    -userProfileRepository: UserProfileRepository
+    -passwordEncoder: PasswordEncoder
+    -jwtService: JwtService
+    -userService: UserService
+    +userRegistration(registerRequest: RegisterRequest): String
+}
+
+class UserService {
+    -userRepository: UserRepository
+    -nutritionsAndGoalsRepository: NutritionsAndGoalsRepository
+    +calculateUserCalories(userProfile: UserProfile, userId: Integer, flag: boolean, water: double): void
+    -calculateCaloriesForGender(gender: Gender, commonData: double, age: int): double
+    -calculateCaloriesForActivity(activityLevel: ActivityLevel, calories: double): double
+    -calculateCaloriesForWeeklyGoal(weeklyGoal: WeeklyGoal, calories: double): double
+    -saveUserCaloriesAndGoals(userId: Integer, calories: int, protein: int, fats: int, carbs: int): void
+    +saveUserCalories(userId: Integer, caloriesDto: CaloriesDto): void
+}
+
+class JwtService {
+    +generateToken(user: User): String
+}
+
+interface UserRepository {
+    +findByEmail(email: String): Optional<User>
+    +save(user: User): User
+    +findById(userId: Integer): User
+}
+
+interface PasswordEncoder {
+    +encode(rawPassword: CharSequence): String
+}
+
+interface UserProfileRepository {
+    +save(userProfile: UserProfile): UserProfile
+}
+
+interface NutritionsAndGoalsRepository {
+    +save(nutritionsAndGoals: NutritionsAndGoals): NutritionsAndGoals
+    +findByUserId(userId: Integer): Optional<NutritionsAndGoals>
+}
+
+class RegisterRequest {
+    +getFirstName(): String
+    +getLastName(): String
+    +getEmail(): String
+    +getPassword(): String
+    +getGoal(): String
+    +getActivityLevel(): String
+    +getGender(): String
+    +getDateOfBirth(): LocalDate
+    +getHeight(): int
+    +getWeight(): BigDecimal
+    +getGoalWeight(): BigDecimal
+    +getWeeklyGoal(): String
+}
+
+class AuthenticationResponse {
+    -token: String
+}
+
+class User {
+    -firstName: String
+    -lastName: String
+    -email: String
+    -password: String
+}
+
+class UserProfile {
+    -goal: Goal
+    -activityLevel: ActivityLevel
+    -gender: Gender
+    -dateOfBirth: LocalDate
+    -height: int
+    -weight: BigDecimal
+    -goalWeight: BigDecimal
+    -weeklyGoal: BigDecimal
+    -user: User
+}
+
+class CaloriesDto {
+    ~calories: int
+    ~protein: int
+    ~carbs: int
+    ~fats: int
+    ~water: double
+}
+
+class NutritionsAndGoals {
+    +setCaloriesGoal(caloriesGoal: int): void
+    +setCarbsGoal(carbsGoal: int): void
+    +setProteinGoal(proteinGoal: int): void
+    +setFatGoal(fatGoal: int): void
+    +setWaterGoal(waterGoal: double): void
+    -caloriesGoal: int
+    -proteinGoal: int
+    -carbsGoal: int
+    -fatGoal: int
+    -waterGoal: BigDecimal
+    -stepGoal: int
+    -user: User
+}
+
+AuthenticationController *- AuthenticationService: contains
+AuthenticationService *- UserService: contains
+AuthenticationService *- JwtService: contains
+AuthenticationService *- PasswordEncoder: contains
+AuthenticationService *- UserRepository: contains
+AuthenticationService *- UserProfileRepository: contains
+UserService *- UserRepository: contains
+UserService *- NutritionsAndGoalsRepository: contains
+User <.up. UserRepository : manipulates
+UserProfile <.up. UserProfileRepository : manipulates
+NutritionsAndGoals <.up. NutritionsAndGoalsRepository : manipulates
+AuthenticationResponse <.up. AuthenticationController: returns
+RegisterRequest <.up. AuthenticationController: uses
+RegisterRequest <.up. AuthenticationService: uses
+User <.up. AuthenticationService: uses
+UserProfile <.up. AuthenticationService: uses
+CaloriesDto <.up. UserService: uses
+NutritionsAndGoals <.up. UserService: uses
+User "1" --* "1" UserProfile : owns profile
+User "1" --* "1" NutritionsAndGoals : has goals
+@enduml
