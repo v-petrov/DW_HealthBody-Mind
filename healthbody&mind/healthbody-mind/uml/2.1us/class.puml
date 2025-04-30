@@ -1,0 +1,104 @@
+@startuml
+class UserController {
+    -userService: UserService
+    -jwtService: JwtService
+    -saveUserProfile(token: String, userProfileDto: UserProfileDto): ResponseEntity<CaloriesDto>
+}
+
+class UserService {
+    -userRepository: UserRepository
+    -userProfileRepository: UserProfileRepository
+    -nutritionAndGoalsRepository: NutritionsAndGoalsRepository
+    +saveUserProfile(userId: Integer, userProfileDto: UserProfileDto): CaloriesDto
+    +calculateUserCalories(userProfile: UserProfile, userId: Integer, flag: boolean, water: double): void
+    -calculateCaloriesForGender(gender: Gender, commonData: double, age: int): double
+    -calculateCaloriesForActivity(activityLevel: ActivityLevel, calories: double): double
+    -calculateCaloriesForWeeklyGoal(weeklyGoal: WeeklyGoal, calories: double): double
+    +getUserCalories(userId: Integer): CaloriesDto
+}
+
+class JwtService {
+    +extractUserId(token: String): Integer
+}
+
+interface UserProfileRepository {
+    +findByUserId(userId: Integer): Optional<UserProfile>
+    +save(userProfile: UserProfile): UserProfile
+}
+
+interface NutritionsAndGoalsRepository {
+    +findByUserId(userId: Integer): Optional<NutritionsAndGoals>
+    +save(nutritionAndGoals: NutritionAndGoals): NutritionsAndGoals
+}
+
+interface UserRepository {
+    +findById(userId: Integer): User
+}
+
+class CaloriesDto {
+    ~calories: int
+    ~protein: int
+    ~carbs: int
+    ~fats: int
+    ~water: double
+}
+
+class UserProfileDto {
+    ~getWeight(): double
+    ~getGoalWeight(): double
+    ~getGoal(): String
+    ~getWeeklyGoal(): String
+    ~getActivityLevel(): String
+    ~getSteps(): int
+}
+
+class UserProfile {
+    +setWeight(weight: BigDecimal): void
+    +setGoalWeight(goalWeight: BigDecimal): void
+    +setGoal(goal: Goal): void
+    +setWeeklyGoal(weeklyGoal: WeeklyGoal): void
+    +setActivityLevel(activityLevel: ActivityLevel): void
+    -goal: Goal
+    -activityLevel: ActivityLevel
+    -gender: Gender
+    -dateOfBirth: LocalDate
+    -height: int
+    -weight: BigDecimal
+    -goalWeight: BigDecimal
+    -weeklyGoal: BigDecimal
+    -user: User
+}
+
+class NutritionsAndGoals {
+    +setStepGoal(stepGoal: int): void
+    +getCaloriesGoal(): int
+    +getCarbsGoal(): int
+    +getProteinGoal(): int
+    +getFatGoal(): int
+    +getWaterGoal(): double
+    -caloriesGoal: int
+    -proteinGoal: int
+    -carbsGoal: int
+    -fatGoal: int
+    -waterGoal: BigDecimal
+    -stepGoal: int
+    -user: User
+}
+
+UserController *- UserService: contains
+UserController *- JwtService: contains
+UserService *- UserProfileRepository: contains
+UserService *- UserRepository: contains
+UserService *- NutritionsAndGoalsRepository: contains
+User <.up. UserRepository : manipulates
+UserProfile <.up. UserProfileRepository : manipulates
+NutritionsAndGoals <.up. NutritionsAndGoalsRepository : manipulates
+CaloriesDto <.up. UserController: returns
+UserProfileDto <.up. UserController: uses
+UserProfileDto <.up. UserService: uses
+CaloriesDto <.up. UserService: uses
+NutritionsAndGoals <.up. UserService: uses
+UserProfile <.up. UserService: uses
+User "1" --* "1" UserProfile : owns profile
+User "1" --* "1" NutritionsAndGoals : has goals
+@enduml

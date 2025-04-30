@@ -1,0 +1,70 @@
+@startuml
+actor User
+participant UserController
+participant JwtService
+participant UserService
+participant UserProfileRepository
+participant NutritionsAndGoalsRepository
+participant UserRepository
+
+User -> UserController : saveUserProfile(token, userProfileDto)
+activate UserController
+
+UserController -> JwtService : extractUserId(token)
+activate JwtService
+JwtService --> UserController : userId
+deactivate JwtService
+
+UserController -> UserService : saveUserProfile(userId, userProfileDto)
+activate UserService
+
+UserService -> UserProfileRepository : findByUserId(userId)
+activate UserProfileRepository
+UserProfileRepository --> UserService : UserProfile
+deactivate UserProfileRepository
+
+UserService -> UserProfile : setWeight, setGoalWeight, setGoal, setWeeklyGoal, setActivityLevel
+UserService -> UserProfileRepository : save(UserProfile)
+activate UserProfileRepository
+UserProfileRepository --> UserService : UserProfile
+deactivate UserProfileRepository
+
+UserService -> NutritionsAndGoalsRepository : findByUserId(userId)
+activate NutritionsAndGoalsRepository
+NutritionsAndGoalsRepository --> UserService : NutritionsAndGoals
+deactivate NutritionsAndGoalsRepository
+
+UserService -> NutritionsAndGoals : setStepGoal
+
+UserService -> NutritionsAndGoalsRepository : save(NutritionsAndGoals)
+activate NutritionsAndGoalsRepository
+NutritionsAndGoalsRepository --> UserService : NutritionsAndGoals
+deactivate NutritionsAndGoalsRepository
+
+alt userProfileDto.isStepsFlag == true
+    UserService -> UserService : calculateUserCalories(...)
+    activate UserService
+    UserService -> NutritionsAndGoalsRepository : findByUserId(userId)
+    activate NutritionsAndGoalsRepository
+    NutritionsAndGoalsRepository --> UserService : NutritionsAndGoals
+    deactivate NutritionsAndGoalsRepository
+
+    UserService -> NutritionsAndGoals : setCaloriesGoal, setProteinGoal, setCarbsGoal, setFatGoal, setWaterGoal
+    UserService -> NutritionsAndGoalsRepository : save(NutritionsAndGoals)
+    activate NutritionsAndGoalsRepository
+    NutritionsAndGoalsRepository --> UserService : NutritionsAndGoals
+    deactivate NutritionsAndGoalsRepository
+    deactivate UserService
+end
+
+UserService -> NutritionsAndGoalsRepository : findByUserId(userId)
+activate NutritionsAndGoalsRepository
+NutritionsAndGoalsRepository --> UserService : NutritionsAndGoals
+deactivate NutritionsAndGoalsRepository
+
+UserService --> UserController : CaloriesDto
+deactivate UserService
+
+UserController --> User : ResponseEntity<CaloriesDto>
+deactivate UserController
+@enduml
