@@ -1,0 +1,44 @@
+@startuml
+class FoodController {
+    -foodService: FoodService
+    -getFoodByName(foodName: String): ResponseEntity<Map<String, Object>>
+}
+
+class FoodService {
+    -foodRepository: FoodRepository
+    +searchFoodByName(foodName: String): List<FoodDto>
+}
+
+interface FoodRepository {
+    +findByNameContainingIgnoreCase(name: String): List<Food>
+}
+
+class FoodDto {
+    ~id: Integer
+    ~name: String
+    ~calories: int
+    ~carbs: double
+    ~fats: double
+    ~protein: double
+    ~sugar: double
+    ~measurement: String
+}
+
+class Food {
+    +getId(): Integer
+    +getName(): String
+    +getCalories(): int
+    +getCarbs(): BigDecimal
+    +getFats(): BigDecimal
+    +getProtein(): BigDecimal
+    +getSugar(): BigDecimal
+    +getMeasurement(): Measurement
+}
+
+FoodController *- FoodService: contains
+FoodService *- FoodRepository: contains
+FoodDto <.up. FoodController: returns
+Food <.up. FoodRepository: uses
+Food <.up. FoodService: uses
+FoodDto <.up. FoodService: uses
+@enduml

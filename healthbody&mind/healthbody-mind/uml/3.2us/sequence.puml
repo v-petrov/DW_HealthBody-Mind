@@ -1,0 +1,23 @@
+@startuml
+actor User
+participant FoodController
+participant FoodService
+participant FoodRepository
+
+User -> FoodController : getFoodByName(foodName)
+activate FoodController
+
+FoodController -> FoodService : searchFoodByName(foodName)
+activate FoodService
+
+FoodService -> FoodRepository : findByNameContainingIgnoreCase(foodName)
+activate FoodRepository
+FoodRepository --> FoodService : List<Food>
+deactivate FoodRepository
+
+FoodService --> FoodController : List<FoodDto>
+deactivate FoodService
+
+FoodController --> User : ResponseEntity<Map<String, Object>>
+deactivate FoodController
+@enduml

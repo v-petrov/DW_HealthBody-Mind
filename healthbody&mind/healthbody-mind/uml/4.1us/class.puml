@@ -1,0 +1,68 @@
+@startuml
+class ExerciseController {
+    -exerciseService: ExerciseService
+    -jwtService: JwtService
+    -saveLiftingDto(token: String, liftingDto: LiftingDto): ResponseEntity<Map<String, String>>
+    -saveCardioDto(token: String, cardioDto: CardioDto): ResponseEntity<Map<String, String>>
+}
+
+class ExerciseService {
+    -userRepository: UserRepository
+    -exerciseRepository: ExerciseRepository
+    +saveLiftingData(Integer: userId, LiftingDto: liftingDto): void
+    +saveCardioData(Integer: userId, cardioDto: cardioDto): void
+}
+
+interface ExerciseRepository {
+    +save(exercise: Exercise): Exercise
+}
+
+interface UserRepository {
+    +findById(userId: Integer): User
+}
+
+class JwtService {
+    +extractUserId(String: token): Integer
+}
+
+class LiftingDto {
+    +getDate(): String
+    +getWorkoutActivityLevel(): String
+    +getDurationInMinutes(): int
+    +getCaloriesBurned(): int
+}
+
+class CardioDto {
+    +getDate(): String
+    +getCaloriesBurned(): int
+    +getDurationInMinutes(): int
+    +getSteps(): int
+}
+
+class Exercise {
+    -durationInMinutes: int
+    -caloriesBurned: int
+    -steps: Integer
+    -type: Type
+    -workoutActivityLevel: WorkoutActivityLevel
+    -date: LocalDate
+    -user: User
+}
+
+class User {
+}
+
+ExerciseController *- ExerciseService: contains
+ExerciseController *- JwtService: contains
+ExerciseService *- ExerciseRepository: contains
+ExerciseService *- UserRepository: contains
+LiftingDto <.up. ExerciseController: uses
+CardioDto <.up. ExerciseController: uses
+LiftingDto <.up. ExerciseService: uses
+CardioDto <.up. ExerciseService: uses
+User <.up. ExerciseService: uses
+Exercise <.up. ExerciseService: uses
+User <.up. UserRepository: uses
+Exercise <.up. ExerciseRepository: uses
+User "1" --* "0.." Exercise : one user can have more than one record
+@enduml

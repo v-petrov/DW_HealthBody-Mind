@@ -1,0 +1,64 @@
+@startuml
+actor User
+participant ExerciseController
+participant JwtService
+participant ExerciseService
+participant UserRepository
+participant ExerciseRepository
+
+User -> ExerciseController : saveLiftingData(token, liftingDto)
+activate ExerciseController
+
+ExerciseController -> JwtService : extractUserId(token)
+activate JwtService
+JwtService --> ExerciseController : userId
+deactivate JwtService
+
+ExerciseController -> ExerciseService : saveLiftingData(userId, liftingDto)
+activate ExerciseService
+
+ExerciseService -> UserRepository : findById(userId)
+activate UserRepository
+UserRepository --> ExerciseService : User
+deactivate UserRepository
+
+ExerciseService -> ExerciseRepository : save(exercise)
+activate ExerciseRepository
+ExerciseRepository --> ExerciseService : Exercise
+deactivate ExerciseRepository
+
+ExerciseService --> ExerciseController : void
+deactivate ExerciseService
+
+ExerciseController --> User : ResponseEntity<Map<String, String>>
+deactivate ExerciseController
+
+== Alternative Flow: Cardio ==
+
+User -> ExerciseController : saveCardioData(token, cardioDto)
+activate ExerciseController
+
+ExerciseController -> JwtService : extractUserId(token)
+activate JwtService
+JwtService --> ExerciseController : userId
+deactivate JwtService
+
+ExerciseController -> ExerciseService : saveCardioData(userId, cardioDto)
+activate ExerciseService
+
+ExerciseService -> UserRepository : findById(userId)
+activate UserRepository
+UserRepository --> ExerciseService : User
+deactivate UserRepository
+
+ExerciseService -> ExerciseRepository : save(exercise)
+activate ExerciseRepository
+ExerciseRepository --> ExerciseService : Exercise
+deactivate ExerciseRepository
+
+ExerciseService --> ExerciseController : void
+deactivate ExerciseService
+
+ExerciseController --> User : ResponseEntity<Map<String, String>>
+deactivate ExerciseController
+@enduml

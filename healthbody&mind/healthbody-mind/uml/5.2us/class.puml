@@ -1,0 +1,46 @@
+@startuml
+class ChartController {
+    -chartService: ChartService
+    -jwtService: JwtService
+    -getChartDataForAPeriod(token: String, days: int, chartType: ChartTypeDto): ResponseEntity<Map<String, Integer>>
+}
+
+class ChartService {
+    -foodIntakeRepository: FoodIntakeRepository
+    -exerciseRepository: ExerciseRepository
+    +getChartDataForAPeriod(userId: Integer, days: int, chartType: ChartTypeDto): Map<String, Integer>
+    -listDataForChart(userId: Integer, startDate: LocalDate, endDate: LocalDate, chartType: ChartTypeDto): List<Map<String, Object>>
+    -mapDataForChart(rawData: List<Map<String, Object>>, chartType: ChartTypeDto): Map<String, Integer>
+    -fillMissingDataWithZero(startDate: LocalDate, endDate: LocalDate, existingData: Map<String, Integer>): Map<String, Integer>
+}
+
+class JwtService {
+    +extractUserId(String: token): Integer
+}
+
+interface FoodIntakeRepository {
+    +getCaloriesIntakeByDate(userId: Integer, startDate: LocalDate, endDate: LocalDate): List<Map<String, Object>>
+    +getCarbsIntakeByDate(userId: Integer, startDate: LocalDate, endDate: LocalDate): List<Map<String, Object>>
+    +getFatIntakeByDate(userId: Integer, startDate: LocalDate, endDate: LocalDate): List<Map<String, Object>>
+    +getProteinIntakeByDate(userId: Integer, startDate: LocalDate, endDate: LocalDate): List<Map<String, Object>>
+}
+
+interface ExerciseRepository {
+    +getBurnedCaloriesByDate(userId: Integer, startDate: LocalDate, endDate: LocalDate): List<Map<String, Object>>
+}
+
+enum ChartTypeDto {
+    CALORIES_INTAKE
+    BURNED_CALORIES
+    CARBS_INTAKE
+    FAT_INTAKE
+    PROTEIN_INTAKE
+}
+
+ChartController *- ChartService: contains
+ChartController *- JwtService: contains
+ChartService *- ExerciseRepository: contains
+ChartService *- FoodIntakeRepository: contains
+ChartTypeDto <.up. ChartController: uses
+ChartTypeDto <.up. ChartService: uses
+@enduml

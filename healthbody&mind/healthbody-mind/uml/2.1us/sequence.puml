@@ -5,7 +5,6 @@ participant JwtService
 participant UserService
 participant UserProfileRepository
 participant NutritionsAndGoalsRepository
-participant UserRepository
 
 User -> UserController : saveUserProfile(token, userProfileDto)
 activate UserController
@@ -23,7 +22,6 @@ activate UserProfileRepository
 UserProfileRepository --> UserService : UserProfile
 deactivate UserProfileRepository
 
-UserService -> UserProfile : setWeight, setGoalWeight, setGoal, setWeeklyGoal, setActivityLevel
 UserService -> UserProfileRepository : save(UserProfile)
 activate UserProfileRepository
 UserProfileRepository --> UserService : UserProfile
@@ -34,7 +32,6 @@ activate NutritionsAndGoalsRepository
 NutritionsAndGoalsRepository --> UserService : NutritionsAndGoals
 deactivate NutritionsAndGoalsRepository
 
-UserService -> NutritionsAndGoals : setStepGoal
 
 UserService -> NutritionsAndGoalsRepository : save(NutritionsAndGoals)
 activate NutritionsAndGoalsRepository
@@ -49,7 +46,6 @@ alt userProfileDto.isStepsFlag == true
     NutritionsAndGoalsRepository --> UserService : NutritionsAndGoals
     deactivate NutritionsAndGoalsRepository
 
-    UserService -> NutritionsAndGoals : setCaloriesGoal, setProteinGoal, setCarbsGoal, setFatGoal, setWaterGoal
     UserService -> NutritionsAndGoalsRepository : save(NutritionsAndGoals)
     activate NutritionsAndGoalsRepository
     NutritionsAndGoalsRepository --> UserService : NutritionsAndGoals

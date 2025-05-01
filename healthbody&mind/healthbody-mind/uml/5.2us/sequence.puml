@@ -1,0 +1,54 @@
+@startuml
+actor User
+participant ChartController
+participant JwtService
+participant ChartService
+participant FoodIntakeRepository
+participant ExerciseRepository
+
+User -> ChartController : getChartDataForAPeriod(token, days, chartType)
+activate ChartController
+
+ChartController -> JwtService : extractUserId(token)
+activate JwtService
+JwtService --> ChartController : userId
+deactivate JwtService
+
+ChartController -> ChartService : getChartDataForAPeriod(userId, days, chartType)
+activate ChartService
+
+ChartService -> ChartService : listDataForChart(userId, startDate, endDate, chartType)
+activate ChartService
+
+alt chartType == CALORIES_INTAKE
+    ChartService -> FoodIntakeRepository : getCaloriesIntakeByDate(userId, startDate, endDate)
+    FoodIntakeRepository --> ChartService : List<Map<String, Object>>
+else chartType == BURNED_CALORIES
+    ChartService -> ExerciseRepository : getBurnedCaloriesByDate(userId, startDate, endDate)
+    ExerciseRepository --> ChartService : List<Map<String, Object>>
+else chartType == CARBS_INTAKE
+    ChartService -> FoodIntakeRepository : getCarbsIntakeByDate(userId, startDate, endDate)
+    FoodIntakeRepository --> ChartService : List<Map<String, Object>>
+else chartType == FAT_INTAKE
+    ChartService -> FoodIntakeRepository : getFatIntakeByDate(userId, startDate, endDate)
+    FoodIntakeRepository --> ChartService : List<Map<String, Object>>
+else chartType == PROTEIN_INTAKE
+    ChartService -> FoodIntakeRepository : getProteinIntakeByDate(userId, startDate, endDate)
+    FoodIntakeRepository --> ChartService : List<Map<String, Object>>
+end
+
+deactivate ChartService
+
+ChartService -> ChartService : mapDataForChart(rawData, chartType)
+activate ChartService
+ChartService --> ChartService : Map<String, Integer>
+deactivate ChartService
+
+ChartService -> ChartService : fillMissingDatesWithZero(startDate, endDate, mapData)
+activate ChartService
+ChartService --> ChartController : Map<String, Integer>
+deactivate ChartService
+
+ChartController --> User : ResponseEntity<Map<String, Integer>>
+deactivate ChartController
+@enduml

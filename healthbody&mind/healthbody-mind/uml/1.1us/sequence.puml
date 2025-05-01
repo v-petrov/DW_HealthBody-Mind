@@ -32,7 +32,7 @@ deactivate UserRepository
 
 AuthenticationService -> UserProfileRepository : save(userProfile)
 activate UserProfileRepository
-UserProfileRepository -->> AuthenticationService : void
+UserProfileRepository -->> AuthenticationService : UserProfile
 deactivate UserProfileRepository
 
 AuthenticationService -> UserService : calculateUserCalories(userProfile, userId, flag, water)
@@ -40,7 +40,7 @@ activate UserService
 
 UserService -> NutritionsAndGoalsRepository : save(nutritionsAndGoals)
 activate NutritionsAndGoalsRepository
-NutritionsAndGoalsRepository -->> UserService : void
+NutritionsAndGoalsRepository -->> UserService : NutritionsAndGoals
 deactivate NutritionsAndGoalsRepository
 
 UserService -->> AuthenticationService : void
