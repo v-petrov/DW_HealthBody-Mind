@@ -1,0 +1,34 @@
+@startuml
+class AIRecommendationController {
+    -aiRecommendationService: AIRecommendationService
+    -sendQuestionToDialogflow(question: Map<String, Object>): ResponseEntity<String>
+}
+
+class AIRecommendationService {
+    -restTemplate: RestTemplate
+    -dialogflowTokenManager: DialogflowTokenManager
+    -projectId: String
+    -{static} DIALOGFLOW_URL : String
+    +sendQuestionToDialogflow(question: Map<String, Object>): String
+}
+
+class DialogflowTokenManager{
+     -{static} DIALOGFLOW_SCOPE : String
+     -{static} KEY_FILE_PATH : String
+     -cachedToken: AccessToken
+     +getAccessToken(): String
+}
+
+class RestTemplate {
+    +exchange(url: String, method: HttpMethod, requestEntity: HttpEntity<?>): <T> ResponseEntity<T>
+}
+
+class AccessToken {
+    +getTokenValue(): String
+}
+
+AIRecommendationController *- AIRecommendationService: contains
+AIRecommendationService *- RestTemplate: contains
+AIRecommendationService *- DialogflowTokenManager: contains
+AccessToken <.up. DialogflowTokenManager: uses
+@enduml

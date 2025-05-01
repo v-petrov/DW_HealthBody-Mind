@@ -1,0 +1,80 @@
+@startuml
+class AIRecommendationController {
+    -aiRecommendationService: AIRecommendationService
+    -jwtService: JwtService
+    -getDailyRecommendation(token: String, userDynamicDataDto: UserDynamicDataDto): ResponseEntity<Map<String, String>>
+}
+
+class AIRecommendationService {
+    -recommendationRepository: RecommendationRepository
+    -userRecommendationRepository: UserRecommendationRepository
+    -userRepository: UserRepository
+    +getDailyRecommendation(userId: Integer, dto: UserDynamicDataDto): String
+    -fillTemplate(template: String, userDynamicDataDto: UserDynamicDataDto): String
+    -estimateWeeksToGoal(weight: double, goalWeight: double, weeklyGoal: String): int
+    -formatWeeklyGoal(weeklyGoal: String): String
+}
+
+interface UserRepository {
+    +findById(userId: Integer): User
+}
+
+interface RecommendationRepository {
+    +findByGoal(goal: Goal): List<Recommendation>
+}
+
+interface UserRecommendationRepository {
+    +findByUserAndDate(user: User, date: LocalDate): Optional<UserRecommendation>
+    +save(userRecommendation: UserRecommendation): UserRecommendation
+}
+
+class JwtService {
+    +extractUserId(String: token): Integer
+}
+
+class UserDynamicDataDto {
+    +getWeight(): double
+    +getGoalWeight(): double
+    +getGoal(): String
+    +getWeeklyGoal(): String
+    +getActivityLevel(): String
+    +getSteps(): int
+    +getCalories(): int
+    +getProtein(): int
+    +getCarbs(): int
+    +getFats(): int
+    +getWater(): double
+    +getDate(): LocalDate
+}
+
+class UserRecommendation {
+    -user: User
+    -date: LocalDate
+    -filledRecommendation: String
+    +getFilledRecommendation(): String
+}
+
+enum Goal {
+    LOSE_WEIGHT
+    GAIN_WEIGHT
+    MAINTAIN_WEIGHT
+}
+
+class User() {
+
+}
+
+AIRecommendationController *- AIRecommendationService: contains
+AIRecommendationController *- JwtService: contains
+AIRecommendationService *- UserRepository: contains
+AIRecommendationService *- RecommendationRepository: contains
+AIRecommendationService *- UserRecommendationRepository: contains
+UserRecommendation <.up. UserRecommendationRepository: manipulates
+User <.up. UserRepository: manipulates
+UserDynamicDataDto <.up. AIRecommendationController: uses
+UserDynamicDataDto <.up. AIRecommendationService: uses
+Goal <.up. AIRecommendationService: uses
+User <.up. AIRecommendationService: uses
+UserRecommendation <.up. AIRecommendationService: uses
+
+@enduml

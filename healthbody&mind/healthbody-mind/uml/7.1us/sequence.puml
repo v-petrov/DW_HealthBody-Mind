@@ -1,0 +1,42 @@
+@startuml
+actor User
+participant AIRecommendationController
+participant AIRecommendationService
+participant DialogflowTokenManager
+participant AccessToken
+participant RestTemplate
+participant "Resources" as RS <<resource>>
+participant "GoogleCredentials" as GC <<external>>
+
+User -> AIRecommendationController : sendQuestionToDialogflow(question)
+activate AIRecommendationController
+
+AIRecommendationController -> AIRecommendationService : sendQuestionToDialogflow(question)
+activate AIRecommendationService
+
+AIRecommendationService -> DialogflowTokenManager : getAccessToken()
+activate DialogflowTokenManager
+
+alt token is cached and valid
+    DialogflowTokenManager -> AccessToken : getTokenValue()
+    DialogflowTokenManager --> AIRecommendationService : token
+else token is expired, or it doesn't exist
+    DialogflowTokenManager -> RS : read KEY_FILE_PATH
+    DialogflowTokenManager -> GC : createScoped(DIALOGFLOW_SCOPE)
+    DialogflowTokenManager -> GC : refreshIfExpired()
+    DialogflowTokenManager -> AccessToken : getTokenValue()
+    DialogflowTokenManager --> AIRecommendationService : token
+end
+deactivate DialogflowTokenManager
+
+AIRecommendationService -> RestTemplate : exchange(url, POST, requestEntity)
+activate RestTemplate
+RestTemplate --> AIRecommendationService : ResponseEntity<String>
+deactivate RestTemplate
+
+AIRecommendationService --> AIRecommendationController : String
+deactivate AIRecommendationService
+
+AIRecommendationController --> User : ResponseEntity<String>
+deactivate AIRecommendationController
+@enduml

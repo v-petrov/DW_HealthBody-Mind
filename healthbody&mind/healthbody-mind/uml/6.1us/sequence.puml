@@ -1,0 +1,58 @@
+@startuml
+actor User
+participant AIRecommendationController
+participant JwtService
+participant AIRecommendationService
+participant UserRepository
+participant UserRecommendationRepository
+participant RecommendationRepository
+
+User -> AIRecommendationController : getDailyRecommendation(token, userDynamicDataDto)
+activate AIRecommendationController
+
+AIRecommendationController -> JwtService : extractUserId(token)
+activate JwtService
+JwtService --> AIRecommendationController : userId
+deactivate JwtService
+
+AIRecommendationController -> AIRecommendationService : getDailyRecommendation(userId, dto)
+activate AIRecommendationService
+
+AIRecommendationService -> UserRepository : findById(userId)
+activate UserRepository
+UserRepository --> AIRecommendationService : User
+deactivate UserRepository
+
+AIRecommendationService -> UserRecommendationRepository : findByUserAndDate(user, dto.date)
+activate UserRecommendationRepository
+alt recommendation exists
+    UserRecommendationRepository --> AIRecommendationService : Optional<UserRecommendation>
+    AIRecommendationService --> AIRecommendationController : filledRecommendation
+    deactivate UserRecommendationRepository
+    deactivate AIRecommendationService
+    AIRecommendationController --> User : ResponseEntity(filledRecommendation)
+    deactivate AIRecommendationController
+else recommendation doesn't exist
+    UserRecommendationRepository --> AIRecommendationService : user recommendation doesn't exist
+    deactivate UserRecommendationRepository
+
+    AIRecommendationService -> RecommendationRepository : findByGoal(dto.goal)
+    activate RecommendationRepository
+    RecommendationRepository --> AIRecommendationService : List<Recommendation>
+    deactivate RecommendationRepository
+
+    AIRecommendationService -> AIRecommendationService : formatWeeklyGoal(String weeklyGoal)
+    AIRecommendationService -> AIRecommendationService : estimateWeeksToGoal(double weight, double goalWeight, String weeklyGoal)
+    AIRecommendationService -> AIRecommendationService : fillTemplate(template, dto)
+
+    AIRecommendationService -> UserRecommendationRepository : save(userRecommendation)
+    activate UserRecommendationRepository
+    UserRecommendationRepository --> AIRecommendationService : UserRecommendation
+    deactivate UserRecommendationRepository
+
+    AIRecommendationService --> AIRecommendationController : filledTemplate
+    deactivate AIRecommendationService
+    AIRecommendationController --> User : ResponseEntity(filledTemplate)
+    deactivate AIRecommendationController
+end
+@enduml
